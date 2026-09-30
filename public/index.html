@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Among Us: Math Space Odyssey (Persamaan & Pertidaksamaan Linear)</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/math-ui.css">
+</head>
+<body>
+
+  <!-- ================= 0. OVERLAY PERINGATAN WAJIB LANDSCAPE (HP / MOBILE) ================= -->
+  <div id="landscape-enforcer-overlay">
+    <div class="rotate-phone-anim"></div>
+    <h2 class="rotate-title">PUTAR HP KE MODE LANDSCAPE 🔄</h2>
+    <p class="rotate-desc">Game <strong>Among Us Matematika</strong> membutuhkan tampilan layar mendatar (Landscape) agar kamu bisa bergerak dan mengerjakan tugas aljabar dengan leluasa.</p>
+    <button id="btn-force-fullscreen" class="btn-fullscreen-toggle">🖥️ AKTIFKAN LAYAR PENUH</button>
+  </div>
+
+  <!-- ================= 1. LOBBY SCREEN ================= -->
+  <div id="lobby-screen">
+    <div class="lobby-box">
+      <div class="game-logo">
+        <h1>AMONG US</h1>
+        <div class="subtitle">🚀 MATH SPACE ODYSSEY (PERSAMAAN & PERTIDAKSAMAAN LINEAR) 📐</div>
+      </div>
+
+      <div class="lobby-input-section">
+        <input type="text" id="player-name-input" class="input-field" placeholder="Masukkan Nama Astronot..." maxlength="14" value="Astronot 1">
+        
+        <div class="lobby-actions">
+          <button id="btn-create-room" class="btn-primary">➕ BUAT ROOM BARU</button>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="room-code-input" class="input-field" placeholder="KODE ROOM" maxlength="5" style="width: 140px; text-transform: uppercase;">
+            <button id="btn-join-room" class="btn-secondary">🔗 GABUNG</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail Room Terhubung -->
+      <div id="lobby-room-details" class="lobby-room-info">
+        <div class="room-code-tag">KODE ROOM: <span id="display-room-code">-----</span> | PEMAIN: <span id="lobby-player-count">1/10</span></div>
+
+        <div class="color-picker-container">
+          <h4>PILIH WARNA KOSTUM:</h4>
+          <div id="color-picker-grid" class="color-picker-grid"></div>
+        </div>
+
+        <div id="lobby-player-grid" class="lobby-player-grid"></div>
+
+        <button id="btn-start-game" class="btn-start" style="display: none;">🚀 MULAI GAME</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 2. GAME CONTAINER & CANVAS ================= -->
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+
+    <!-- In-Game HUD -->
+    <div id="hud-overlay">
+      <!-- Total Task Progress Bar -->
+      <div class="total-task-bar-container">
+        <div class="total-task-bar-bg">
+          <div id="total-task-bar-fill" class="total-task-bar-fill"></div>
+          <div id="total-task-bar-text" class="total-task-bar-text">Total Tugas Matematika Kru: 0/0 (0%)</div>
+        </div>
+      </div>
+
+      <!-- Player Personal Tasks Checklist -->
+      <div class="player-tasks-panel">
+        <h4>📋 DAFTAR TUGAS ALJABAR</h4>
+        <div id="player-task-list"></div>
+      </div>
+
+      <!-- Sound Toggle -->
+      <div class="hud-top-right">
+        <button id="btn-sound-toggle" class="hud-mini-btn" title="Toggle Sound">🔊</button>
+      </div>
+
+      <!-- Role Reveal Banner -->
+      <div id="role-reveal-banner" class="role-reveal"></div>
+
+      <!-- Touch Virtual Joystick (Mobile / HP) -->
+      <div id="joystick-zone">
+        <div id="joystick-knob"></div>
+      </div>
+
+      <!-- HUD Action Buttons (Bottom Right) -->
+      <div class="action-buttons-container">
+        <button id="action-btn-kill" class="hud-action-btn btn-kill" disabled title="Kill Crewmate (Q)">
+          <span class="btn-icon">🔪</span>
+          <span>KILL</span>
+          <span id="kill-cooldown-timer" class="cooldown-overlay"></span>
+        </button>
+
+        <button id="action-btn-vent" class="hud-action-btn btn-vent" disabled title="Use Vent (V)">
+          <span class="btn-icon">🕳️</span>
+          <span>VENT</span>
+        </button>
+
+        <button id="action-btn-report" class="hud-action-btn btn-report" disabled title="Report Body (R)">
+          <span class="btn-icon">📢</span>
+          <span>REPORT</span>
+        </button>
+
+        <button id="action-btn-use" class="hud-action-btn btn-use" disabled title="Use / Do Task (E / Space / Tap)">
+          <span class="btn-icon">✋</span>
+          <span>USE</span>
+        </button>
+      </div>
+
+      <!-- In-Game & Meeting Chat Panel -->
+      <div class="hud-chat-panel">
+        <div id="chat-messages-container" class="chat-messages"></div>
+        <div class="chat-input-bar">
+          <input type="text" id="chat-input" placeholder="Ketik pesan chat..." maxlength="120">
+          <button id="btn-send-chat">KIRIM</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 3. MATH TASK MODAL (CREWMATE TASK) ================= -->
+  <div id="task-modal" class="game-modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h2 id="task-modal-title">Tugas Kapal</h2>
+          <span id="task-category-badge" class="category-badge">Materi</span>
+        </div>
+        <button id="btn-close-task" class="btn-close-modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="task-landscape-split">
+          <!-- Kolom Kiri: Soal & Scratchpad -->
+          <div>
+            <div id="task-math-prompt" class="math-prompt-box"></div>
+
+            <div class="scratchpad-section" style="margin-top: 8px;">
+              <div class="scratchpad-toolbar">
+                <span>✏️ Papan Coret Hitungan:</span>
+                <div class="scratch-tools">
+                  <button id="scratch-tool-pen" class="scratch-btn active">Pulpen</button>
+                  <button id="scratch-tool-eraser" class="scratch-btn">Penghapus</button>
+                  <button id="scratch-tool-clear" class="scratch-btn">Bersihkan</button>
+                </div>
+              </div>
+              <canvas id="scratchpad-canvas" class="scratch-canvas"></canvas>
+            </div>
+          </div>
+
+          <!-- Kolom Kanan: Pilihan Jawaban & Feedback -->
+          <div>
+            <div id="task-options-grid" class="options-grid"></div>
+            <div id="task-feedback-msg" class="task-feedback-box" style="display: none;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 4. EMERGENCY MEETING & VOTING MODAL ================= -->
+  <div id="meeting-modal" class="game-modal-overlay">
+    <div class="modal-dialog" style="max-width: 820px;">
+      <div class="modal-header">
+        <div class="meeting-header-banner" style="width: 100%;">
+          <h2 id="meeting-reason-badge">🚨 EMERGENCY MEETING</h2>
+          <p>Dipanggil oleh: <strong id="meeting-caller-name">Astronot</strong></p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div id="meeting-timer-count" class="meeting-timer-box">Waktu Diskusi: 15s</div>
+
+        <div id="meeting-players-grid" class="meeting-players-grid"></div>
+
+        <div class="vote-skip-container">
+          <button id="btn-skip-vote" class="btn-skip-vote">LEWATI VOTE (SKIP VOTE)</button>
+        </div>
+
+        <div id="vote-result-banner" class="vote-result-banner"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       5. FITUR KHUSUS: SIDANG ALIBI IMPOSTOR (TRIAL OF INNOCENCE)
+       ============================================================ -->
+  <div id="impostor-trial-modal" class="game-modal-overlay">
+    <div class="modal-dialog trial-modal-dialog" style="max-width: 800px;">
+      <div class="modal-header" style="background: #2b1114;">
+        <div class="trial-alert-banner" style="width: 100%;">
+          <h2>⚖️ PENGADILAN DARURAT: ALIBI MATEMATIKA IMPOSTOR ⚖️</h2>
+          <p>Terdakwa: <strong id="trial-accused-name">Player</strong> dapat membatalkan vote jika benar menjawab <strong>3 dari 3 soal linear</strong>!</p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <!-- Step Badges: Soal 1, 2, 3 -->
+        <div class="trial-steps-container">
+          <div class="trial-step-badge active" id="trial-step-1">🔥 Soal 1</div>
+          <div class="trial-step-badge" id="trial-step-2">🔒 Soal 2</div>
+          <div class="trial-step-badge" id="trial-step-3">🔒 Soal 3</div>
+        </div>
+
+        <!-- Timer Bar -->
+        <div class="trial-timer-container">
+          <div id="trial-timer-bar-fill" class="trial-timer-bar-fill"></div>
+          <div id="trial-timer-text" class="trial-timer-text">Sisa Waktu Sidang: 40s</div>
+        </div>
+
+        <!-- Sisi Terdakwa (Impostor Aktif Menjawab) -->
+        <div id="trial-active-challenge" style="display: none;">
+          <div class="task-landscape-split">
+            <div>
+              <div id="trial-question-category" style="color: #ffcc00; font-weight: 800; font-size: 0.85rem; margin-bottom: 4px;"></div>
+              <div id="trial-question-prompt" class="math-prompt-box"></div>
+
+              <div class="scratchpad-section" style="margin-top: 8px;">
+                <div class="scratchpad-toolbar">
+                  <span>✏️ Coret-Coretan Bukti Aljabar:</span>
+                </div>
+                <canvas id="trial-scratchpad-canvas" class="scratch-canvas" style="height: 90px;"></canvas>
+              </div>
+            </div>
+
+            <div>
+              <div id="trial-options-grid" class="options-grid"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sisi Penonton (Kru Menonton Live Telemetri) -->
+        <div id="trial-spectator-view" class="trial-spectator-box" style="display: none;">
+          <div class="radar-spinner"></div>
+          <h3 id="spectator-status-msg" style="color: #00e5ff;">Terdakwa sedang membuktikan alibi matematika...</h3>
+          <p style="color: #aaa; margin-top: 6px; font-size: 0.8rem;">Jika berhasil menjawab 3/3 soal linear dengan 100% benar, hukuman vote dibatalkan!</p>
+          <div id="trial-accused-avatar" class="player-avatar-preview" style="margin: 12px auto 0;">
+            <div class="mini-visor"></div>
+          </div>
+        </div>
+
+        <!-- Hasil Akhir Sidang -->
+        <div id="trial-verdict-box" class="trial-verdict" style="display: none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 6. GAME OVER MODAL ================= -->
+  <div id="game-over-modal" class="game-modal-overlay">
+    <div class="modal-dialog" style="max-width: 580px;">
+      <div class="modal-body game-over-box">
+        <h1 id="game-over-title" class="victory-title">KEMENANGAN KRU!</h1>
+        <p id="game-over-reason" style="font-size: 1rem; color: #ddd; margin: 10px 0;"></p>
+
+        <h3 style="color: #00e5ff; margin-top: 15px; font-size: 0.85rem;">IDENTITAS ASLI SELURUH ASTRONOT:</h3>
+        <div id="game-over-players-list" style="margin: 8px 0 20px;"></div>
+
+        <button onclick="location.reload()" class="btn-primary" style="width: 100%;">🔄 KEMBALI KE LOBBY</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/math-renderer.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/ui-manager.js"></script>
+  <script src="js/game.js"></script>
+
+</body>
+</html>

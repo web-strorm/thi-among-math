@@ -1,0 +1,618 @@
+/* math-ui.css - Styling Dialog Task Matematika, LaTeX Formula, Scratchpad & Impostor Trial Multi-Device */
+
+/* ================= MODAL OVERLAYS (BASE) ================= */
+.game-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 8, 15, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 10px;
+}
+
+.modal-dialog {
+  background: #111a29;
+  border: 2px solid #2f4568;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 780px;
+  max-height: 94vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 180, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  animation: modalPop 0.22s ease-out;
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  padding: 12px 18px;
+  background: #182438;
+  border-bottom: 2px solid #233550;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.category-badge {
+  background: #00b4db;
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  margin-left: 8px;
+}
+
+.btn-close-modal {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+}
+
+.btn-close-modal:hover {
+  color: #ff4d4d;
+}
+
+.modal-body {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ================= PERENDER RUMUS MATEMATIKA ================= */
+.math-prompt-box {
+  background: #182333;
+  border: 1px solid #32476b;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #f0f4fa;
+}
+
+.math-block {
+  margin: 8px 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffeb3b;
+  text-align: center;
+  font-family: 'Cambria Math', 'Times New Roman', serif;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.math-inline {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffeb3b;
+  font-family: 'Cambria Math', 'Times New Roman', serif;
+}
+
+/* Pecahan (Fractions) */
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0 3px;
+}
+
+.num {
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 1px;
+}
+
+.den {
+  padding-top: 1px;
+}
+
+.frac-bar {
+  display: none;
+}
+
+/* Sistem Persamaan Linear Bracket (SPLDV) */
+.spldv-bracket {
+  display: inline-flex;
+  align-items: center;
+  margin: 6px 0;
+}
+
+.bracket-brace {
+  font-size: 2.2rem;
+  font-weight: 300;
+  margin-right: 6px;
+  line-height: 1;
+}
+
+.case-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: left;
+}
+
+/* ================= OPSI JAWABAN ================= */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.math-option-btn {
+  background: #1c2a3f;
+  border: 2px solid #2d4263;
+  border-radius: 10px;
+  padding: 12px;
+  color: #fff;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  min-height: 48px;
+  transition: all 0.12s;
+}
+
+.math-option-btn:hover {
+  background: #253752;
+  border-color: #00e5ff;
+}
+
+.math-option-btn:active {
+  transform: scale(0.97);
+}
+
+.math-option-btn.selected {
+  border-color: #ffcc00;
+  background: #2f4566;
+}
+
+.opt-letter {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  color: #00e5ff;
+  font-size: 1rem;
+}
+
+/* ================= SCRATCHPAD CANVAS (PAPAN CORET-CORETAN) ================= */
+.scratchpad-section {
+  background: #0d1420;
+  border: 1px solid #203047;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.scratchpad-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.scratchpad-toolbar span {
+  font-size: 0.75rem;
+  color: #8899aa;
+  font-weight: 700;
+}
+
+.scratch-tools {
+  display: flex;
+  gap: 5px;
+}
+
+.scratch-btn {
+  background: #1c2a3f;
+  border: 1px solid #364d73;
+  color: #fff;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.scratch-btn.active {
+  background: #00b4db;
+  border-color: #00e5ff;
+}
+
+.scratch-canvas {
+  width: 100%;
+  height: 120px;
+  border-radius: 6px;
+  display: block;
+  cursor: crosshair;
+  background: #121927;
+  touch-action: none;
+}
+
+/* Feedback Box */
+.task-feedback-box {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.task-feedback-box.success {
+  background: rgba(56, 239, 125, 0.2);
+  border: 1px solid #38ef7d;
+  color: #38ef7d;
+}
+
+.task-feedback-box.error {
+  background: rgba(255, 77, 77, 0.2);
+  border: 1px solid #ff4d4d;
+  color: #ff7675;
+}
+
+/* ================= EMERGENCY MEETING & VOTING ================= */
+.meeting-header-banner {
+  background: linear-gradient(90deg, #e52d27, #b31217);
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  color: #fff;
+}
+
+.meeting-timer-box {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  color: #ffeb3b;
+  text-align: center;
+  margin: 6px 0;
+  font-weight: 800;
+}
+
+.meeting-players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.meeting-player-card {
+  background: #182333;
+  border: 2px solid #2b3e5c;
+  border-radius: 10px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.meeting-player-card.dead {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.meeting-player-card.is-self {
+  border-color: #00e5ff;
+}
+
+.card-avatar {
+  width: 36px;
+  height: 44px;
+  border-radius: 10px 10px 4px 4px;
+  position: relative;
+  border: 2px solid #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dead-cross {
+  font-size: 20px;
+}
+
+.card-name {
+  font-size: 0.82rem;
+  font-weight: 800;
+  margin-top: 5px;
+}
+
+.card-status {
+  font-size: 0.7rem;
+  color: #8899aa;
+}
+
+.btn-cast-vote {
+  background: #00b4db;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.72rem;
+  padding: 5px 12px;
+  margin-top: 6px;
+  cursor: pointer;
+}
+
+.btn-cast-vote:hover {
+  background: #0083b0;
+}
+
+.vote-skip-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btn-skip-vote {
+  background: #4a5d78;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.vote-badges-container {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.vote-result-banner {
+  background: #1f3049;
+  border: 2px solid #ffcc00;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  margin-top: 10px;
+  display: none;
+}
+
+/* ============================================================
+   FITUR UTAMA: SIDANG ALIBI IMPOSTOR (TRIAL OF INNOCENCE)
+   ============================================================ */
+.trial-modal-dialog {
+  border: 3px solid #ff3333;
+  box-shadow: 0 0 40px rgba(255, 0, 0, 0.45);
+  animation: trialPulse 1.5s infinite alternate;
+}
+
+@keyframes trialPulse {
+  0% { border-color: #ff3333; box-shadow: 0 0 25px rgba(255, 0, 0, 0.5); }
+  100% { border-color: #ff8888; box-shadow: 0 0 45px rgba(255, 50, 50, 0.8); }
+}
+
+.trial-alert-banner {
+  background: linear-gradient(90deg, #b31217, #e52d27, #b31217);
+  padding: 10px 14px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.trial-alert-banner h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.trial-alert-banner p {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffe6e6;
+  margin-top: 3px;
+}
+
+.trial-steps-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.trial-step-badge {
+  background: #192333;
+  border: 2px solid #364d73;
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #7b92b3;
+}
+
+.trial-step-badge.active {
+  border-color: #ffcc00;
+  color: #ffcc00;
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.4);
+}
+
+.trial-step-badge.completed {
+  border-color: #38ef7d;
+  color: #38ef7d;
+  background: rgba(56, 239, 125, 0.15);
+}
+
+.trial-timer-container {
+  width: 100%;
+  background: #101726;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 15px;
+  position: relative;
+  border: 1px solid #304566;
+  margin-bottom: 8px;
+}
+
+.trial-timer-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
+  transition: width 1s linear;
+}
+
+.trial-timer-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: #fff;
+}
+
+.trial-spectator-box {
+  background: #162233;
+  border: 2px dashed #3a537a;
+  border-radius: 12px;
+  padding: 20px 15px;
+  text-align: center;
+}
+
+.radar-spinner {
+  width: 45px;
+  height: 45px;
+  border: 3px solid rgba(0, 229, 255, 0.2);
+  border-top: 3px solid #00e5ff;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.trial-verdict {
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 10px;
+  animation: modalPop 0.3s ease-out;
+}
+
+.trial-verdict.success {
+  background: rgba(56, 239, 125, 0.2);
+  border: 2px solid #38ef7d;
+  color: #38ef7d;
+}
+
+.trial-verdict.failed {
+  background: rgba(255, 77, 77, 0.2);
+  border: 2px solid #ff4d4d;
+  color: #ff7675;
+}
+
+.verdict-anim {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin-top: 8px;
+  letter-spacing: 2px;
+}
+
+/* ================= GAME OVER MODAL ================= */
+.game-over-box {
+  text-align: center;
+  padding: 20px;
+}
+
+.victory-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  color: #38ef7d;
+  text-shadow: 0 0 20px rgba(56, 239, 125, 0.6);
+}
+
+.defeat-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  color: #ff4d4d;
+  text-shadow: 0 0 20px rgba(255, 77, 77, 0.6);
+}
+
+.game-over-player-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #182333;
+  padding: 6px 14px;
+  border-radius: 6px;
+  margin: 5px 0;
+  font-size: 0.85rem;
+}
+
+.role-tag.impostor {
+  color: #ff4d4d;
+  font-weight: 900;
+}
+
+.role-tag.crewmate {
+  color: #00e5ff;
+  font-weight: 900;
+}
+
+/* ================= RESPONSIVE LAYOUT KHUSUS LANDSCAPE MOBILE ================= */
+@media screen and (max-height: 520px) {
+  .modal-dialog {
+    max-width: 94vw;
+    max-height: 94vh;
+  }
+  .modal-body {
+    padding: 10px;
+    gap: 8px;
+  }
+  .task-landscape-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .math-prompt-box {
+    padding: 8px 12px;
+    font-size: 0.88rem;
+  }
+  .math-block {
+    font-size: 1.05rem;
+    margin: 4px 0;
+    padding: 3px;
+  }
+  .scratch-canvas {
+    height: 75px;
+  }
+  .options-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .math-option-btn {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    min-height: 40px;
+  }
+}
